@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -54,18 +55,21 @@ int main(int argc, const char** argv)
 	unsigned int offset = 0;
 	auto leftBound = offset;
 	auto total = offset;
+	vector<unsigned int> rightPeaks;
+	rightPeaks.push_back(modes.size() - 1);
+	for (unsigned int index = modes.size() - 1; index; --index) rightPeaks.push_back(max(modes[index], modes[index - 1]));
 	while (leftBound < modes.size() - 1)
 	{
-		if (modes[offset] <= modes[leftBound])
+		while (modes[offset] <= modes[leftBound])
 		{
-			total += modes[leftBound] - modes[offset];
 			++offset;
 			if (offset >= modes.size() - 1) break;
 		}
-		else
+		for (auto index = leftBound + 1; index < offset; ++index)
 		{
-			leftBound = offset;
+			total += min(modes[leftBound] - modes[index], modes[offset] - modes[index]);
 		}
+		leftBound = offset;
 	}
 
 	cout << "Liquid carrying capacity = " << total << "\r\n";
