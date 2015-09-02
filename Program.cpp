@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Windows.h>
 #include <string>
 #include <vector>
 
@@ -9,9 +8,10 @@ int main(int argc, const char** argv)
 {
 	if (argc < 4)
 	{
-		cout << "Liquid carrying capacity = 0\r\n";
-		return 0;
+		cout << "Usage: HistogramLiquidCarryingCapacity [array of whole numbers, beginning with a positive number]\r\n";
+		return -11111;
 	}
+	
 	vector<unsigned int> modes;
 	for (unsigned int index = 1; index < static_cast<unsigned int>(argc); ++index)
 	{
@@ -56,16 +56,16 @@ int main(int argc, const char** argv)
 	auto total = offset;
 	while (leftBound < modes.size() - 1)
 	{
-		while (modes[offset] <= modes[leftBound])
+		if (modes[offset] <= modes[leftBound])
 		{
+			total += modes[leftBound] - modes[offset];
 			++offset;
 			if (offset >= modes.size() - 1) break;
 		}
-		for (auto index = leftBound + 1; index < offset; ++index)
+		else
 		{
-			total += min(modes[leftBound] - modes[index], modes[offset] - modes[index]) ;
+			leftBound = offset;
 		}
-		leftBound = offset;
 	}
 
 	cout << "Liquid carrying capacity = " << total << "\r\n";
